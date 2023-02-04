@@ -1,0 +1,112 @@
+:root {
+	--shadow: rgba(0, 0, 0, 0.4);
+	--highlight: rgba(255, 255, 255, 0.3);
+	--shadow-lv0: #000;
+	--bg-lv0: #14141f;
+	--bg-lv1: #1a1a28;
+	--bg-lv2: #28283e;
+	--bg-lv3: #30304b;
+	--bg-lv4: #363654;
+	--bg-gray: #606080;
+	--bg-btn: #464;
+	--bg-btn-active: #353;
+	--bg-btn-hov: #494;
+	--col-gray: #a0a0a0;
+	--col-text: #eeeeee;
+	--col-link: #58e;
+	--col-link-v: #eae;
+}
+
+body {
+	font-family: sans-serif;
+	background-color: var(--bg-lv1);
+	color: var(--col-text);
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: var(--col-link);
+}
+
+a:visited {
+	color: var(--col-link-v);
+}
+
+#nav h2 {
+	margin: 2px;
+	margin-left: 8px;
+	margin-right: 13px;
+	display: inline-block;
+}
+
+#nav {
+	margin: 0;
+	margin-bottom: 10px;
+	padding: 6px;
+	background-color: var(--bg-lv2);
+	box-shadow: var(--shadow) 2px 2px 7px;
+}
+
+
+#content {
+	margin-left: 14px;
+}
+
+div.form-input-cont {
+	margin: 9px;
+	margin-bottom: 17px;
+}
+
+div.label {
+	margin-bottom: 6px;
+	font-weight: bold;
+}
+
+.cont-lv1 {
+	border-radius: 9px;
+	max-width: 600px;
+	background-color: var(--bg-lv2);
+	padding: 10px;
+	box-shadow: var(--shadow) 2px 2px 14px;
+}
+
+.cont-lv2 {
+	border-radius: 6px;
+	background-color: var(--bg-lv3);
+	padding: 8px;
+}
+
+input[type="text"], textarea {
+	display: inline-block;
+	background-color: var(--bg-lv0);
+	font-family: inherit;
+	color: inherit;
+	border: solid;
+	padding: 6px;
+	border-width: 1px;
+	border-color: var(--bg-gray);
+	box-shadow: var(--shadow-lv0) 3px 3px 5px inset, var(--shadow) 2px 2px 14px;
+	border-radius: 6px;
+}
+
+input[type="submit"], button {
+	color: var(--col-text);
+	background-color: var(--bg-btn);
+	box-shadow:
+			var(--shadow) -1px -1px 3px inset,
+			var(--highlight) 1px 1px 2px inset,
+			var(--shadow) 1px 1px 7px;
+	border-radius: 6px;
+	border-style: solid;
+	border-width: 1px;
+	padding: 7px;
+}
+
+input[type="submit"]:active, button:active {
+	background-color: var(--bg-btn-active);
+	box-shadow:
+			var(--shadow) 2px 2px 3px inset,
+			var(--shadow) 1px 1px 7px;
+
+}
