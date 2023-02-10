@@ -15,29 +15,36 @@ ProjectService::ProjectService(std::shared_ptr<sql::Sqlite> db)
 	stmtCreate(db->prepare(fmt::format(R"(
 		INSERT INTO projects ({}) VALUES ({});
 	)", XSTR(PROJECT_FIELD_NAMES_NOID), PROJECT_PLACEHOLDERS_NOID).c_str())),
+	
 	stmtUpdate(db->prepare(R"(
 		UPDATE projects SET name = ?, shortName = ?, description = ?
 		WHERE id = ?;
 	)")),
+	
 	stmtDelete(db->prepare(R"(
 		DELETE FROM projects WHERE id = ?;
 	)")),
+	
 	stmtIncrement(db->prepare(R"(
 		UPDATE projects SET taskCounter = ? WHERE id = ?;
 	)")),
+	
 	stmtGetProjectNames(db->prepare<std::string>(R"(
 		SELECT name FROM projects;
 	)")),
+	
 	stmtGetProject(db->prepare<PROJECT_FIELD_TYPES>(fmt::format(R"(
 		SELECT {} FROM projects WHERE id = ?;
 	)", XSTR(PROJECT_FIELD_NAMES)).c_str())),
+	
 	stmtGetProjects(db->prepare<PROJECT_FIELD_TYPES>(fmt::format(R"(
 		SELECT {} FROM projects;
 	)", XSTR(PROJECT_FIELD_NAMES)).c_str())),
+	
 	stmtLastInsertRowID(db->prepare<int32_t>("SELECT last_insert_rowid()"))
 {}
 
-int32_t ProjectService::createProject(const CreateProjectRequest &req) {
+int32_t ProjectService::createProject(const WriteProjectRequest &req) {
 	Project project = {
 			.name = req.name,
 			.shortName = req.shortName,
@@ -60,7 +67,7 @@ std::optional<std::string> ProjectService::getNewTaskNameAndIncrement(int32_t pr
 	return {};
 }
 
-void ProjectService::updateProject(int32_t id, const CreateProjectRequest &req) {
+void ProjectService::updateProject(int32_t id, const WriteProjectRequest &req) {
 	stmtUpdate.execute(req.name, req.shortName, req.description, id);
 }
 

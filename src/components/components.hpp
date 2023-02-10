@@ -13,6 +13,7 @@
 #include "templated/TaskDetailsComponent.hpp"
 #include "templated/ProjectDetailsComponent.hpp"
 #include "templated/ProjectFormComponent.hpp"
+#include "templated/TaskFormComponent.hpp"
 
 
 #endif //SIGMATODO_COMPONENTS_HPP

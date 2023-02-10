@@ -11,32 +11,44 @@
 TaskService::TaskService(std::shared_ptr<sql::Sqlite> db, ProjectService &projectService)
 		: db(db),
 	projectService(projectService),
+	
 	stmtCreateTask(db->prepare(fmt::format(R"(
 		INSERT INTO tasks ({}) VALUES ({});
 	)", XSTR(TASK_FIELD_NAMES_NOID), TASK_PLACEHOLDERS_NOID).c_str())),
+	
 	stmtUpdateTask(db->prepare(R"(
 		UPDATE tasks SET title = ?, description = ?, status = ?, dateUpdated = ? WHERE id = ?;
 	)")),
+	
 	stmtUpdateStatus(db->prepare(R"(
 		UPDATE tasks SET status = ?, dateUpdated = ? WHERE id = ?;
 	)")),
+	
 	stmtGetTask(db->prepare<TASK_FIELD_TYPES>(fmt::format(R"(
 		SELECT {} FROM tasks WHERE id = ?;
 	)", XSTR(TASK_FIELD_NAMES)).c_str())),
+	
 	stmtGetTaskByName(db->prepare<TASK_FIELD_TYPES>(fmt::format(R"(
 		SELECT {} FROM tasks WHERE name = ?;
 	)", XSTR(TASK_FIELD_NAMES)).c_str())),
+	
 	stmtGetTaskList(db->prepare<TASK_FIELD_TYPES>(fmt::format(R"(
 		SELECT {} FROM tasks WHERE projectId = ? ORDER BY status, dueDate;
 	)", XSTR(TASK_FIELD_NAMES)).c_str())),
+	
 	stmtGetTaskHeaders(db->prepare<TASK_HDR_FIELD_TYPES>(fmt::format(R"(
 		SELECT {} FROM tasks WHERE projectId = ? ORDER BY status, dueDate;
 	)", XSTR(TASK_HDR_FIELD_NAMES)).c_str())),
+	
+	stmtGetActiveTaskHeaders(db->prepare<TASK_HDR_FIELD_TYPES>(fmt::format(R"(
+		SELECT {} FROM tasks WHERE status = 0 ORDER BY status, dueDate;
+	)", XSTR(TASK_HDR_FIELD_NAMES)).c_str())),
+	
 	stmtLastInsertRowID(db->prepare<int32_t>("SELECT last_insert_rowid()")) {
 
 }
 
-int32_t TaskService::createTask(const CreateTaskRequest &req) {
+int32_t TaskService::createTask(const WriteTaskRequest &req) {
 	auto taskName = projectService.getNewTaskNameAndIncrement(req.projectId).value();
 
 	Task task = {
@@ -57,7 +69,8 @@ int32_t TaskService::createTask(const CreateTaskRequest &req) {
 	return stmtLastInsertRowID.execute()[0];
 }
 
-void TaskService::editTask(int32_t id, const EditTaskRequest &req) {
+void TaskService::editTask(int32_t id, const WriteTaskRequest &req)
+{
 	stmtUpdateTask.execute(req.title, req.description, req.status, Time::SecsSinceEpoch(), id);
 }
 
@@ -98,6 +111,15 @@ std::vector<Task> TaskService::getTaskList(int32_t projectId) {
 
 std::vector<TaskHeader> TaskService::getTaskHeaderList(int32_t projectId) {
 	auto rv = stmtGetTaskHeaders.execute(projectId);
+	std::vector<TaskHeader> ret;
+	for (const auto &[TASK_HDR_FIELD_NAMES]: rv)
+		ret.push_back(TaskHeader{TASK_HDR_FIELD_NAMES});
+	return ret;
+}
+
+std::vector<TaskHeader> TaskService::getActiveTaskHeaderList()
+{
+	auto rv = stmtGetActiveTaskHeaders.execute();
 	std::vector<TaskHeader> ret;
 	for (const auto &[TASK_HDR_FIELD_NAMES]: rv)
 		ret.push_back(TaskHeader{TASK_HDR_FIELD_NAMES});

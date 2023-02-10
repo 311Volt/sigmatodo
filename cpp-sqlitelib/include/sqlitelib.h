@@ -6,7 +6,7 @@
 //
 
 /* Modified by 311Volt for sigmatodo on 2023-01-23.
- * Changed formatting and enabled detailed exception messages.
+ * Changed formatting, enabled detailed exception messages and added int64 support.
  */
 
 #ifndef _CPPSQLITELIB_HTTPSLIB_H_
@@ -15,6 +15,7 @@
 #include <sqlite3.h>
 
 #include <cstring>
+#include <cstdint>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -49,15 +50,23 @@ inline void verify(int rc, sqlite3* db = nullptr, int expected = SQLITE_OK)
 	}
 }
 
-template <typename T> T get_column_value(sqlite3_stmt *stmt, int col) 
+template <typename T>
+T get_column_value(sqlite3_stmt *stmt, int col)
 {
 	return {};
 }
 
 
-template <> inline int get_column_value<int>(sqlite3_stmt *stmt, int col) 
+template <>
+inline int get_column_value<int>(sqlite3_stmt *stmt, int col)
 {
 	return sqlite3_column_int(stmt, col);
+}
+
+template <>
+inline int64_t get_column_value<int64_t>(sqlite3_stmt *stmt, int col)
+{
+	return sqlite3_column_int64(stmt, col);
 }
 
 template <>
@@ -82,7 +91,8 @@ inline std::vector<char> get_column_value<std::vector<char>>(sqlite3_stmt *stmt,
 	return val;
 }
 
-template <int N, typename T, typename... Rest> struct ColumnValues;
+template <int N, typename T, typename... Rest>
+struct ColumnValues;
 
 template <int N, typename T, typename... Rest> 
 struct ColumnValues 
@@ -112,6 +122,12 @@ template <>
 inline void bind_value<int>(sqlite3_stmt *stmt, int col, int val, sqlite3* db) 
 {
 	verify(sqlite3_bind_int(stmt, col, val), db);
+}
+
+template <>
+inline void bind_value<int64_t>(sqlite3_stmt *stmt, int col, int64_t val, sqlite3* db)
+{
+	verify(sqlite3_bind_int64(stmt, col, val), db);
 }
 
 template <>

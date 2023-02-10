@@ -15,6 +15,7 @@
 
 struct CtorInit {
 	inline explicit CtorInit(const std::function<void(void)>& fn)	{fn();}
+	inline void stfuWunused() {}
 };
 
 struct TodoAppConfig {
@@ -52,6 +53,8 @@ private:
 	std::shared_ptr<sql::Sqlite> db;
 	FileCache fileCache;
 	std::unique_ptr<DirWatcher> dirWatcher;
+	
+	CtorInit dbInit;
 
 	ProjectService projSvc;
 	TaskService taskSvc;

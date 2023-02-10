@@ -1,11 +1,12 @@
-<form id="project-form" class="cont-lv1" method="post" action="{0}">
+
+<form id="project-form" class="cont-lv1" method="post" action="action">
 	<div class="form-input-cont">
 		<div class="label">
 			<label for="prjname">
 				Project name
 			</label>
 		</div>
-		<input type="text" id="prjname" name="prjname" value="{1}" />
+		<input type="text" id="prjname" name="prjname" value="{0}" />
 	</div>
 	<div class="form-input-cont">
 		<div class="label">
@@ -13,7 +14,7 @@
 				Short name
 			</label>
 		</div>
-		<input type="text" name="prjshortname" id="prjshortname" value="{2}" />
+		<input type="text" name="prjshortname" id="prjshortname" value="{1}" />
 	</div>
 	<div class="form-input-cont">
 		<div class="label">
@@ -21,7 +22,7 @@
 				Description
 			</label>
 		</div>
-		<textarea form="project-form" id="prjdesc" name="prjdesc">{3}</textarea>
+		<textarea form="project-form" id="prjdesc" name="prjdesc">{2}</textarea>
 	</div>
 	<input type="submit" />
 </form>

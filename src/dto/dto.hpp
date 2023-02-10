@@ -11,24 +11,20 @@ struct AddNoteRequest {
 	std::string content;
 };
 
-struct CreateProjectRequest {
+struct WriteProjectRequest {
 	std::string name;
 	std::string shortName;
 	std::string description;
 };
 
-struct CreateTaskRequest {
+struct WriteTaskRequest {
 	int32_t projectId;
 	std::string title;
 	std::string description;
 	int64_t dueDate;
-};
-
-struct EditTaskRequest {
-	std::string title;
-	std::string description;
 	int32_t status;
 };
+
 
 struct TaskHeader {
 	std::string name;

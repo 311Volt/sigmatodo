@@ -6,12 +6,12 @@
 #include <fmt/format.h>
 
 struct Project {
-	int32_t id;
+	int32_t id = 0;
 	std::string name;
 	std::string shortName;
 	std::string description;
-	int64_t timeCreated;
-	int32_t taskCounter;
+	int64_t timeCreated = 0;
+	int32_t taskCounter = 0;
 
 #define PROJECT_FIELD_NAMES id, name, shortName, description, timeCreated, taskCounter
 #define PROJECT_FIELD_NAMES_NOID name, shortName, description, timeCreated, taskCounter
@@ -34,6 +34,10 @@ struct Project {
 
 	inline std::string title() {
 		return fmt::format("[{}] {}", shortName, name);
+	}
+	
+	inline std::string nameOfNextTask() {
+		return fmt::format("{}-{}", shortName, taskCounter+1);
 	}
 };
 

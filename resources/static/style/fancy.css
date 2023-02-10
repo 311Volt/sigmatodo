@@ -10,9 +10,11 @@
 	--bg-gray: #606080;
 	--bg-btn: #464;
 	--bg-btn-active: #353;
-	--bg-btn-hov: #494;
+	--bg-btn-hov: #474;
+	--bg-hov: #28433e;
 	--col-gray: #a0a0a0;
 	--col-text: #eeeeee;
+	--col-warning: #b77;
 	--col-link: #58e;
 	--col-link-v: #eae;
 }
@@ -31,6 +33,22 @@ a {
 
 a:visited {
 	color: var(--col-link-v);
+}
+
+h1,h2,h3,h4,h5,h6 {
+	margin-top: 8px;
+}
+
+.hdr-extra-top {
+	margin-top: 15px;
+}
+
+h4,h5,h6 {
+	margin-bottom: 2px;
+}
+
+p {
+	margin-bottom: 2px;
 }
 
 #nav h2 {
@@ -65,9 +83,11 @@ div.label {
 
 .cont-lv1 {
 	border-radius: 9px;
-	max-width: 600px;
+	max-width: 800px;
+	margin-right: 15px;
 	background-color: var(--bg-lv2);
 	padding: 10px;
+	margin-bottom: 15px;
 	box-shadow: var(--shadow) 2px 2px 14px;
 }
 
@@ -75,11 +95,99 @@ div.label {
 	border-radius: 6px;
 	background-color: var(--bg-lv3);
 	padding: 8px;
+	margin-bottom: 15px;
+	margin-top: 2px;
 }
 
-input[type="text"], textarea {
+.proj-task-list {
+	background-color: var(--bg-lv0);
+	padding: 10px;
+	border-radius: 6px;
+	box-shadow: var(--shadow-lv0) 1px 1px 5px inset;
+	/*max-height: 600px;*/
+	/*overflow-y: scroll;*/
+}
+
+.task-list-elem {
+	background-color: var(--bg-lv2);
+	transition: background-color 0.15s;
+	padding: 4px;
+	margin: 9px;
+	border-radius: 6px;
+	box-shadow: var(--shadow) 2px 2px 7px;
+}
+
+.task-list-elem:hover {
+	background-color: var(--bg-hov);
+}
+
+.tle-row2 {
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.a-no-dec {
+	text-decoration: none;
+	color: inherit;
+}
+.a-no-dec:visited {
+	color: inherit;
+}
+
+.tle-name {
+	display: inline-block;
+	margin: 0;
+}
+
+.tle-title {
+	color: var(--col-gray);
+	text-overflow: ellipsis;
+	display: inline-block;
+	max-height: 1em;
+	float: left;
+}
+
+.tle-status {
+	background-color: var(--bg-btn);
+	display: inline-block;
+	text-transform: uppercase;
+	font-size: 8pt;
+	padding: 4px;
+	margin: 3px;
+	border-radius: 3px;
+	text-shadow: black 1px 1px 2px;
+}
+
+.tle-overdue {
+	color: var(--col-warning);
+}
+
+.tle-status-active {
+	background-color: #494;
+}
+.tle-status-onhold {
+	background-color: #777;
+}
+.tle-status-todo {
+	background-color: #ba0;
+}
+.tle-status-done {
+	background-color: #88d;
+}
+.tle-status-wontdo {
+	background-color: #977;
+}
+
+.tle-due-date {
+	display: block;
+	margin-top: 5px;
+	float: right;
+}
+
+input[type="text"], textarea, select {
 	display: inline-block;
 	background-color: var(--bg-lv0);
+	min-width: 300px;
 	font-family: inherit;
 	color: inherit;
 	border: solid;
@@ -90,9 +198,21 @@ input[type="text"], textarea {
 	border-radius: 6px;
 }
 
+input[readonly] {
+	background-color: var(--bg-lv2);
+	box-shadow: none;
+	border-color: var(--bg-gray);
+}
+
+input[readonly]:focus {
+	outline: none;
+}
+
+
 input[type="submit"], button {
 	color: var(--col-text);
 	background-color: var(--bg-btn);
+	transition: background-color 0.1s;
 	box-shadow:
 			var(--shadow) -1px -1px 3px inset,
 			var(--highlight) 1px 1px 2px inset,
@@ -102,6 +222,12 @@ input[type="submit"], button {
 	border-width: 1px;
 	padding: 7px;
 }
+
+input[type="submit"]:hover, button:hover {
+	background-color: var(--bg-btn-hov);
+}
+
+
 
 input[type="submit"]:active, button:active {
 	background-color: var(--bg-btn-active);

@@ -6,16 +6,16 @@
 #include <array>
 
 struct Task {
-	int32_t id;
-	int32_t projectId;
+	int32_t id = 0;
+	int32_t projectId = 0;
 	std::string name;
 	std::string title;
 	std::string description;
-	int32_t number;
-	int64_t dateCreated;
-	int64_t dateUpdated;
-	int64_t dueDate;
-	int32_t status;
+	int32_t number = 0;
+	int64_t dateCreated = 0;
+	int64_t dateUpdated = 0;
+	int64_t dueDate = 0;
+	int32_t status = Todo;
 
 #define TASK_FIELD_NAMES id, projectId, name, title, description, number, dateCreated, dateUpdated, dueDate, status
 #define TASK_FIELD_NAMES_NOID projectId, name, title, description, number, dateCreated, dateUpdated, dueDate, status
@@ -61,6 +61,14 @@ struct Task {
 		"todo",
 		"done",
 		"won't do"
+	};
+	
+	static constexpr std::array<std::string_view, 5> StatusCodeNames = {
+		"active",
+		"onhold",
+		"todo",
+		"done",
+		"wontdo"
 	};
 };
 

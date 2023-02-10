@@ -26,7 +26,7 @@ add_executable(sigmatodo
 		src/fs/StringSource.cpp
 		src/components/templated/ProjectDetailsComponent.cpp
 		src/components/templated/ProjectFormComponent.cpp
-		src/components/TextFileComponent.cpp src/fs/DirWatcher.cpp src/fs/DirWatcher.hpp src/util/FormDataParser.cpp src/util/FormDataParser.hpp src/components/DictComponent.cpp src/components/DictComponent.hpp)
+		src/components/TextFileComponent.cpp src/fs/DirWatcher.cpp src/fs/DirWatcher.hpp src/util/FormDataParser.cpp src/util/FormDataParser.hpp src/components/DictComponent.cpp src/components/DictComponent.hpp src/components/templated/TaskFormComponent.cpp src/components/templated/TaskFormComponent.hpp)
 
 target_link_libraries(sigmatodo PRIVATE Crow::Crow fmt::fmt SQLite::SQLite3)
 target_include_directories(sigmatodo PRIVATE "cpp-sqlitelib/include")

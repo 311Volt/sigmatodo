@@ -11,6 +11,7 @@
 template<typename ElemDataType>
 struct ForEachComponentData {
 	std::vector<ElemDataType> elements;
+	std::string emptyFallbackText;
 };
 
 template<ComponentType ElemComponentT>
@@ -21,7 +22,12 @@ public:
 
 	inline void renderTo(std::string& target) override
 	{
-		for(const auto& elem: this->getData().elements) {
+		const auto& [elements, emptyFallbackText] = this->getData();
+		if(elements.size() == 0) {
+			target.append(emptyFallbackText);
+			return;
+		}
+		for(const auto& elem: elements) {
 			ElemComponentT component(&elem);
 			component.renderTo(target);
 		}

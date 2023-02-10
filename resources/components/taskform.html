@@ -1,0 +1,43 @@
+
+<form id="task-form" class="cont-lv1" method="post" action="{6}/action">
+	<div class="form-input-cont">
+		<div class="label">
+			<label for="taskname">
+				Name
+			</label>
+		</div>
+		<input type="text" id="taskname" name="taskname" value="{1}" readonly/>
+	</div>
+	<div class="form-input-cont">
+		<div class="label">
+			<label for="tasktitle">
+				Title
+			</label>
+		</div>
+		<input type="text" id="tasktitle" name="tasktitle" value="{2}" placeholder="What needs to be done?"/>
+	</div>
+	<div class="form-input-cont">
+		<div class="label">
+			<label for="taskdesc">
+				Description
+			</label>
+		</div>
+		<textarea cols="80" rows="15" form="task-form" id="taskdesc" name="taskdesc" placeholder="Describe what needs to be done in more detail">{3}</textarea>
+	</div>
+
+	<div class="form-input-cont">
+		<div class="label">
+			<label for="status">
+				{7}
+			</label>
+		</div>
+		<select id="status" name="status" form="task-form">
+			<option value="0">Active</option>
+			<option value="1">On hold</option>
+			<option value="2" selected>TODO</option>
+			<option value="3">Done</option>
+			<option value="4">Won't do</option>
+		</select>
+	</div>
+	<input type="submit" />
+</form>

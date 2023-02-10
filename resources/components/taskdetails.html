@@ -1,4 +1,21 @@
-<div class="task-details">
-	<h3 class="task-title">[{0}] {1}</h3>
-	<p class="task-desc">{2}</p>
+
+<div class="task-details cont-lv1">
+	<h3>[{0}] {1}</h3>
+	<div><strong>Status: </strong><div class="tle-status tle-status-{8}">{7}</div></div>
+	<p><strong>Created on: </strong>{3}</p>
+	<p><strong>Updated on: </strong>{4}</p>
+	<p><strong>Due date: </strong>{5}</p>
+	<h4 class="hdr-extra-top">Description:</h4>
+	<div class="cont-lv2">{2}</div>
+
+	<a href="/task/{0}/edit"><button>Edit task...</button></a>
+	<h4>Change status:</h4>
+	<div>
+		<a href="/task/{0}/updatestatus?value=0"><button>active</button></a>
+		<a href="/task/{0}/updatestatus?value=1"><button>on hold</button></a>
+		<a href="/task/{0}/updatestatus?value=2"><button>todo</button></a>
+		<a href="/task/{0}/updatestatus?value=3"><button>done</button></a>
+		<a href="/task/{0}/updatestatus?value=4"><button>won't do</button></a>
+	</div>
+
 </div>

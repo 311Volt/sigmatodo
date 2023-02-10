@@ -11,9 +11,9 @@ class ProjectService {
 public:
 	explicit ProjectService(std::shared_ptr<sql::Sqlite> db);
 
-	int32_t createProject(const CreateProjectRequest &req);
+	int32_t createProject(const WriteProjectRequest &req);
 
-	void updateProject(int32_t id, const CreateProjectRequest &req);
+	void updateProject(int32_t id, const WriteProjectRequest &req);
 
 	void deleteProject(int32_t id);
 
