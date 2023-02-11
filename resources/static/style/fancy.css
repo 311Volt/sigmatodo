@@ -184,7 +184,7 @@ div.label {
 	float: right;
 }
 
-input[type="text"], textarea, select {
+input[type="text"], input[type="date"], input[type="time"], textarea, select {
 	display: inline-block;
 	background-color: var(--bg-lv0);
 	min-width: 300px;
@@ -196,6 +196,10 @@ input[type="text"], textarea, select {
 	border-color: var(--bg-gray);
 	box-shadow: var(--shadow-lv0) 3px 3px 5px inset, var(--shadow) 2px 2px 14px;
 	border-radius: 6px;
+}
+
+input[type="date"], input[type="time"] {
+	min-width: inherit;
 }
 
 input[readonly] {

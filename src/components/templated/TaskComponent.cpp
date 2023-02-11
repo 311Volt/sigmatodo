@@ -42,12 +42,15 @@ void TaskComponent::renderTo(std::string &target)
 {
 	const auto& [TASK_HDR_FIELD_NAMES] = getData();
 	bool overdue = false;
-	std::string dueDateStr = DueDateString(dueDate, overdue);
+	std::string dueDateStr = "Due " + DueDateString(dueDate, overdue);
 	
 	fmt::format_to(
 		std::back_inserter(target),
 		fmt::runtime(templateSource->get()),
-		name, title, dueDateStr, Task::StatusNames.at(status),
+		name,
+		title,
+		dueDate ? dueDateStr : "",
+		Task::StatusNames.at(status),
 		overdue ? "tle-overdue" : "",
 		Task::StatusCodeNames.at(status)
 	);

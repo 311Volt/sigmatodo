@@ -2,6 +2,9 @@
 
 #include "../components/components.hpp"
 #include "../util/FormDataParser.hpp"
+#include "../time/Time.hpp"
+
+#include "../dto/dto.hpp"
 
 #include <chrono>
 #include <fmt/chrono.h>
@@ -39,6 +42,17 @@ TodoApp::TodoApp(const TodoAppConfig &config)
 	ProjectFormComponent::setTemplateSource(fileCache.getSource("res/components/projectform.html"));
 	TaskFormComponent::setTemplateSource(fileCache.getSource("res/components/taskform.html"));
 }
+
+
+/**
+ * TODO MISSING ENDPOINTS
+ *  - add project form action
+ *  - edit project form action
+ *  - create task form action
+ *  - edit task form action
+ *  - delete project confirmation
+ *  - delete project action
+ */
 
 void TodoApp::run()
 {
@@ -92,8 +106,7 @@ void TodoApp::initSiteEndpoints()
 		
 		return renderView(view, "projects");
 	});
-	
-	
+
 	CROW_ROUTE(crowApp, "/projects/<int>")([&](int projectId) {
 		auto optProject = projSvc.getProject(projectId);
 		if(!optProject) {
@@ -114,6 +127,23 @@ void TodoApp::initSiteEndpoints()
 	});
 	
 	
+	CROW_ROUTE(crowApp, "/projects/new")([&]() {
+		
+		Project blankProject = {
+			.name = "",
+			.shortName = "",
+			.taskCounter = 0
+		};
+		
+		auto view = views.at("projectcreate").createInstance();
+		view.addComponent<ProjectFormComponent>("prjform", {
+			.project = blankProject,
+			.edit = false
+		});
+		
+		return renderView(view, "edit project");
+	});
+	
 	CROW_ROUTE(crowApp, "/projects/<int>/edit")([&](int projectId) {
 		auto optProject = projSvc.getProject(projectId); //TODO getOr404
 		if(!optProject) {
@@ -121,7 +151,10 @@ void TodoApp::initSiteEndpoints()
 		}
 
 		auto view = views.at("projectedit").createInstance();
-		view.addComponent<ProjectFormComponent>("prjform", *optProject);
+		view.addComponent<ProjectFormComponent>("prjform", {
+			.project = *optProject,
+			.edit = true
+		});
 		
 		return renderView(view, "edit project");
 	});
@@ -134,7 +167,8 @@ void TodoApp::initSiteEndpoints()
 		
 		Task blankTask = {
 			.projectId = optProject->id,
-			.name = optProject->nameOfNextTask()
+			.name = optProject->nameOfNextTask(),
+			.dueDate = Time::SecsSinceEpoch()
 		};
 		
 		auto view = views.at("projtaskcreate").createInstance();
@@ -193,25 +227,89 @@ void TodoApp::initSiteEndpoints()
 
 void TodoApp::initFormEndpoints()
 {
+	CROW_ROUTE(crowApp, "/projects/new/action")
+	.methods(crow::HTTPMethod::POST)([&](const crow::request& req) {
+		
+		auto data = ParseQueryString(req.body);
+		WriteProjectRequest writeReq = { //TODO form validation
+			.name = data.at("prjname"),
+			.shortName = data.at("prjshortname"),
+			.description = data.at("prjdesc")
+		};
+		projSvc.createProject(writeReq);
+		
+		crow::response response {303};
+		response.set_header("Location", "/");
+		return response;
+	});
+
 	CROW_ROUTE(crowApp, "/projects/<int>/edit/action")
 	.methods(crow::HTTPMethod::POST)([&](const crow::request& req, int projectId) {
-		auto view = views.at("formecho").createInstance();
-		view.addComponent<DictComponent>("kv", ParseQueryString(req.body));
-		return renderView(view);
+		
+		if(!projSvc.getProject(projectId)) {
+			return crow::response(404);
+		}
+		
+		auto data = ParseQueryString(req.body);
+		WriteProjectRequest writeReq = { //TODO form validation
+			.name = data.at("prjname"),
+			.shortName = data.at("prjshortname"),
+			.description = data.at("prjdesc")
+		};
+		projSvc.updateProject(projectId, writeReq);
+		
+		crow::response response {303};
+		response.set_header("Location", fmt::format("/projects/{}", projectId));
+		return response;
 	});
 	
 	CROW_ROUTE(crowApp, "/projects/<int>/addtask/action")
 	.methods(crow::HTTPMethod::POST)([&](const crow::request& req, int projectId) {
-		auto view = views.at("formecho").createInstance();
-		view.addComponent<DictComponent>("kv", ParseQueryString(req.body));
-		return renderView(view);
+		if(!projSvc.getProject(projectId)) {
+			return crow::response(404);
+		}
+		auto data = ParseQueryString(req.body);
+		std::string dateStr = data.at("duedate") + " " + data.at("duetime");
+		std::tm tmDueDate {}; //until gcc implements std::chrono::parse (which it will before 2038... right?)
+		std::get_time(&tmDueDate, "%Y-%m-%d %H:%M");
+		int64_t dueDate = std::mktime(&tmDueDate);
+		
+		WriteTaskRequest writeReq = { //TODO form validation
+			.projectId = projectId,
+			.title = data.at("tasktitle"),
+			.description = data.at("taskdesc"),
+			.dueDate = dueDate,
+			.status = std::stoi(data.at("status"))
+		};
+		taskSvc.createTask(writeReq);
+		
+		crow::response response {303};
+		response.set_header("Location", fmt::format("/projects/{}", projectId));
+		return response;
 	});
 	
 	CROW_ROUTE(crowApp, "/task/<string>/edit/action")
 	.methods(crow::HTTPMethod::POST)([&](const crow::request& req, const std::string& taskName) {
-		auto view = views.at("formecho").createInstance();
-		view.addComponent<DictComponent>("kv", ParseQueryString(req.body));
-		return renderView(view);
+		Task originalTask = taskSvc.getTaskByName(taskName).value();
+		
+		auto data = ParseQueryString(req.body);
+		
+		std::string dateStr = data.at("duedate") + " " + data.at("duetime");
+		std::tm tmDueDate {}; //until gcc implements std::chrono::parse (which it will before 2038... right?)
+		std::get_time(&tmDueDate, "%Y-%m-%d %H:%M");
+		int64_t dueDate = std::mktime(&tmDueDate);
+		WriteTaskRequest writeReq = { //TODO form validation
+			.projectId = originalTask.projectId,
+			.title = data.at("tasktitle"),
+			.description = data.at("taskdesc"),
+			.dueDate = dueDate,
+			.status = std::stoi(data.at("status"))
+		};
+		taskSvc.editTask(originalTask.projectId, writeReq);
+		
+		crow::response response {303};
+		response.set_header("Location", fmt::format("/task/{}", taskName));
+		return response;
 	});
 	
 

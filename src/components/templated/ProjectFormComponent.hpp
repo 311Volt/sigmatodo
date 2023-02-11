@@ -5,7 +5,12 @@
 #include "../TemplatedComponent.hpp"
 #include "../../entities/Project.hpp"
 
-class ProjectFormComponent: public TemplatedComponent<Project, ProjectFormComponent> {
+struct ProjectFormComponentData {
+	Project project;
+	bool edit;
+};
+
+class ProjectFormComponent: public TemplatedComponent<ProjectFormComponentData, ProjectFormComponent> {
 public:
 	using TemplatedComponent::TemplatedComponent;
 	void renderTo(std::string &target) override;
