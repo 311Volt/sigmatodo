@@ -10,6 +10,8 @@ namespace Time {
 	std::string DateStr(int64_t time);
 
 	std::string DateTimeStr(int64_t time);
+	
+	int64_t ParseDateTime(const std::string& str);
 }
 
 

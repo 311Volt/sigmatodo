@@ -15,7 +15,6 @@
 
 struct CtorInit {
 	inline explicit CtorInit(const std::function<void(void)>& fn)	{fn();}
-	inline void stfuWunused() {}
 };
 
 struct TodoAppConfig {
@@ -24,6 +23,17 @@ struct TodoAppConfig {
 	std::string dbPath = "./test.db";
 	std::string adminKey = "dev";
 	bool devMode = true;
+	
+	static inline TodoAppConfig Parse(const crow::json::rvalue& json)
+	{
+		return TodoAppConfig {
+			.serverAddr = json["serverAddr"].s(),
+			.serverPort = json["serverPort"].operator int(),
+			.dbPath = json["dbPath"].s(),
+			.adminKey = json["adminKey"].s(),
+			.devMode = json["devMode"].b()
+		};
+	}
 };
 
 class TodoApp {
@@ -54,6 +64,7 @@ private:
 	FileCache fileCache;
 	std::unique_ptr<DirWatcher> dirWatcher;
 	
+	[[maybe_unused]]
 	CtorInit dbInit;
 
 	ProjectService projSvc;

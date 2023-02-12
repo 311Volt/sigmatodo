@@ -1,5 +1,3 @@
-## This project is still WIP and not ready for use.
-
 # sigmatodo
 
 None of the todo apps I found on the internet were remotely close to what I wanted,

@@ -144,6 +144,7 @@ div.label {
 	text-overflow: ellipsis;
 	display: inline-block;
 	max-height: 1em;
+	margin-bottom: 4px;
 	float: left;
 }
 

@@ -37,7 +37,7 @@ struct Project {
 	}
 	
 	inline std::string nameOfNextTask() {
-		return fmt::format("{}-{}", shortName, taskCounter+1);
+		return fmt::format("{}-{}", shortName, taskCounter);
 	}
 };
 

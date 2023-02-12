@@ -25,12 +25,13 @@ TodoApp::TodoApp(const TodoAppConfig &config)
 	  taskSvc(db, projSvc)
 {
 	
-	dbInit.stfuWunused();
-	
 	importViews();
 	initSiteEndpoints();
 	initFormEndpoints();
 	initMgmtEndpoints();
+	
+	fmt::print("dev mode = {}\n", config.devMode);
+	
 	if(config.devMode) {
 		initDevMode();
 	}
@@ -46,10 +47,6 @@ TodoApp::TodoApp(const TodoAppConfig &config)
 
 /**
  * TODO MISSING ENDPOINTS
- *  - add project form action
- *  - edit project form action
- *  - create task form action
- *  - edit task form action
  *  - delete project confirmation
  *  - delete project action
  */
@@ -270,15 +267,12 @@ void TodoApp::initFormEndpoints()
 		}
 		auto data = ParseQueryString(req.body);
 		std::string dateStr = data.at("duedate") + " " + data.at("duetime");
-		std::tm tmDueDate {}; //until gcc implements std::chrono::parse (which it will before 2038... right?)
-		std::get_time(&tmDueDate, "%Y-%m-%d %H:%M");
-		int64_t dueDate = std::mktime(&tmDueDate);
 		
 		WriteTaskRequest writeReq = { //TODO form validation
 			.projectId = projectId,
 			.title = data.at("tasktitle"),
 			.description = data.at("taskdesc"),
-			.dueDate = dueDate,
+			.dueDate = Time::ParseDateTime(dateStr),
 			.status = std::stoi(data.at("status"))
 		};
 		taskSvc.createTask(writeReq);
@@ -295,17 +289,15 @@ void TodoApp::initFormEndpoints()
 		auto data = ParseQueryString(req.body);
 		
 		std::string dateStr = data.at("duedate") + " " + data.at("duetime");
-		std::tm tmDueDate {}; //until gcc implements std::chrono::parse (which it will before 2038... right?)
-		std::get_time(&tmDueDate, "%Y-%m-%d %H:%M");
-		int64_t dueDate = std::mktime(&tmDueDate);
+		
 		WriteTaskRequest writeReq = { //TODO form validation
 			.projectId = originalTask.projectId,
 			.title = data.at("tasktitle"),
 			.description = data.at("taskdesc"),
-			.dueDate = dueDate,
+			.dueDate = Time::ParseDateTime(dateStr),
 			.status = std::stoi(data.at("status"))
 		};
-		taskSvc.editTask(originalTask.projectId, writeReq);
+		taskSvc.editTask(originalTask.id, writeReq);
 		
 		crow::response response {303};
 		response.set_header("Location", fmt::format("/task/{}", taskName));

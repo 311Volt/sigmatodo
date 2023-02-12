@@ -3,6 +3,7 @@
 #define SIGMATODO_FILECACHE_HPP
 
 #include <stdint.h>
+#include <optional>
 #include <unordered_map>
 
 #include "StringSource.hpp"
@@ -32,6 +33,7 @@ private:
 	std::unordered_map<std::string, CachedFileInfo> data;
 };
 
+std::optional<std::string> TryReadFile(const std::string& filename);
 
 class FileCacheStringSource: public StringSource {
 public:

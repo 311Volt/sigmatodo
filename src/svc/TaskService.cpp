@@ -17,7 +17,7 @@ TaskService::TaskService(std::shared_ptr<sql::Sqlite> db, ProjectService &projec
 	)", XSTR(TASK_FIELD_NAMES_NOID), TASK_PLACEHOLDERS_NOID).c_str())),
 	
 	stmtUpdateTask(db->prepare(R"(
-		UPDATE tasks SET title = ?, description = ?, status = ?, dateUpdated = ? WHERE id = ?;
+		UPDATE tasks SET title = ?, description = ?, status = ?, dueDate = ?, dateUpdated = ? WHERE id = ?;
 	)")),
 	
 	stmtUpdateStatus(db->prepare(R"(
@@ -71,10 +71,11 @@ int32_t TaskService::createTask(const WriteTaskRequest &req) {
 
 void TaskService::editTask(int32_t id, const WriteTaskRequest &req)
 {
-	stmtUpdateTask.execute(req.title, req.description, req.status, Time::SecsSinceEpoch(), id);
+	stmtUpdateTask.execute(req.title, req.description, req.status, req.dueDate, Time::SecsSinceEpoch(), id);
 }
 
-void TaskService::updateStatus(int32_t id, int32_t status) {
+void TaskService::updateStatus(int32_t id, int32_t status)
+{
 	stmtUpdateStatus.execute(status, Time::SecsSinceEpoch(), id);
 }
 
