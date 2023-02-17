@@ -32,11 +32,7 @@
 			</label>
 		</div>
 		<select id="status" name="status" form="task-form">
-			<option value="0">Active</option>
-			<option value="1">On hold</option>
-			<option value="2" selected>TODO</option>
-			<option value="3">Done</option>
-			<option value="4">Won't do</option>
+			{10}
 		</select>
 	</div>
 
@@ -46,8 +42,8 @@
 				Due date
 			</label>
 		</div>
-		<input type="date" id="duedate" name="duedate" value="{8}" />
-		<input type="time" id="duetime" name="duetime" value="{9}" />
+		<input type="date" id="duedate" name="duedate" value="1970-01-01" />
+		<input type="time" id="duetime" name="duetime" value="01:00" />
 	</div>
 	<input type="submit" />
 </form>

@@ -13,6 +13,21 @@ void TaskFormComponent::renderTo(std::string &target)
 	bool edit = getData().edit;
 	auto tp = chr::time_point<chr::system_clock> {chr::seconds(dueDate)};
 	
+	static std::string options;
+	options.clear();
+	options.reserve(256);
+	
+	for(int i=0; i<Task::StatusNames.size(); i++) {
+		fmt::format_to(
+			std::back_inserter(options),
+			R"({}<option value="{}"{}>{}</option>)",
+			"\t\t\t",
+			i,
+			i==status ? " selected" : "",
+			Task::StatusNames[i]
+		);
+	}
+	
 	fmt::format_to(
 		std::back_inserter(target),
 		fmt::runtime(templateSource->get()),
@@ -25,7 +40,8 @@ void TaskFormComponent::renderTo(std::string &target)
 		edit ? "edit" : "addtask",
 		edit ? "Status" : "Initial status",
 		fmt::format("{:%Y-%m-%d}", tp),
-		fmt::format("{:%H:%M}", tp)
+		fmt::format("{:%H:%M}", tp),
+		options
 	);
 	
 }

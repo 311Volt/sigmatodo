@@ -30,7 +30,7 @@ TodoApp::TodoApp(const TodoAppConfig &config)
 	initFormEndpoints();
 	initMgmtEndpoints();
 	
-	fmt::print("dev mode = {}\n", config.devMode);
+	CROW_LOG_INFO << fmt::format("dev mode = {}\n", config.devMode);
 	
 	if(config.devMode) {
 		initDevMode();
