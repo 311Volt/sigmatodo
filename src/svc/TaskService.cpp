@@ -60,7 +60,7 @@ int32_t TaskService::createTask(const WriteTaskRequest &req) {
 			.dateCreated = Time::SecsSinceEpoch(),
 			.dateUpdated = Time::SecsSinceEpoch(),
 			.dueDate = req.dueDate,
-			.status = Task::Status::Todo
+			.status = req.status
 	};
 
 	const auto &[TASK_FIELD_NAMES] = task;

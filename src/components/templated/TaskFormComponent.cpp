@@ -13,8 +13,7 @@ void TaskFormComponent::renderTo(std::string &target)
 	bool edit = getData().edit;
 	auto tp = chr::time_point<chr::system_clock> {chr::seconds(dueDate)};
 	
-	static std::string options;
-	options.clear();
+	std::string options;
 	options.reserve(256);
 	
 	for(int i=0; i<Task::StatusNames.size(); i++) {
