@@ -90,6 +90,25 @@ std::optional<std::string> TryReadFile(const std::string& filename)
 	return {};
 }
 
+std::optional<bool> IsRootOf(const std::filesystem::path &root, const std::filesystem::path &path)
+{
+	std::error_code ec1, ec2;
+	auto rootCanonical = fs::canonical(root, ec1).string();
+	auto pathCanonical = fs::canonical(path, ec2).string();
+	
+	if(!ec1 || !ec2) {
+		return std::nullopt;
+	}
+	
+	if(rootCanonical.size() > pathCanonical.size()) {
+		return false;
+	}
+	
+	auto pathRootSubstr = pathCanonical.substr(rootCanonical.size());
+	
+	return (pathRootSubstr == rootCanonical && fs::is_directory(pathRootSubstr));
+}
+
 FileCacheStringSource::FileCacheStringSource(FileCache &cache, std::string path)
  : path(std::move(path)), cache(cache)
 {

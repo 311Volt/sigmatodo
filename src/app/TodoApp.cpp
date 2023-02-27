@@ -312,8 +312,13 @@ void TodoApp::initMgmtEndpoints()
 {
 	
 	CROW_ROUTE(crowApp, "/cstatic/<path>")([&](const std::string &path) {
-		//TODO check for spooky shit in path (like ../../../)
-		fs::path fullPath = fs::path("res/static").append(path);
+		fs::path staticRoot {"res/static"};
+		fs::path fullPath = fs::path(staticRoot).append(path);
+		
+		if(not IsRootOf(staticRoot, path).value_or(true)) {
+			return crow::response(403);
+		}
+		
 		crow::response ret;
 		ret.set_static_file_info(fullPath.string());
 		

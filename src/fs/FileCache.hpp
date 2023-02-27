@@ -7,6 +7,7 @@
 #include <unordered_map>
 
 #include "StringSource.hpp"
+#include <filesystem>
 
 class FileCacheStringSource;
 
@@ -33,6 +34,7 @@ private:
 	std::unordered_map<std::string, CachedFileInfo> data;
 };
 
+std::optional<bool> IsRootOf(const std::filesystem::path& root, const std::filesystem::path& path);
 std::optional<std::string> TryReadFile(const std::string& filename);
 
 class FileCacheStringSource: public StringSource {
